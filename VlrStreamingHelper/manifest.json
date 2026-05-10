@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "VlrStreamingHelper",
+  "version": "1.2.0",
+  "description": "屏蔽 Haojiao.cc 右侧聊天/评论区，并替换 VLR.gg 的某不正当地区旗帜。",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.haojiao.cc/*",
+    "https://haojiao.cc/*",
+    "https://*.vlr.gg/*",
+    "https://vlr.gg/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.haojiao.cc/*",
+        "https://haojiao.cc/*",
+        "https://*.vlr.gg/*",
+        "https://vlr.gg/*"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "VlrStreamingHelper",
+    "default_popup": "popup.html"
+  }
+}

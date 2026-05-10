@@ -1,0 +1,89 @@
+:root {
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+body {
+  width: 260px;
+  margin: 0;
+  color: #172033;
+  background: #ffffff;
+}
+
+.popup {
+  padding: 16px;
+}
+
+header {
+  margin-bottom: 16px;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+p {
+  margin: 0;
+  color: #667085;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e4e7ec;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.toggle-row + .toggle-row {
+  margin-top: 10px;
+}
+
+input {
+  appearance: none;
+  position: relative;
+  width: 42px;
+  height: 24px;
+  margin: 0;
+  border-radius: 999px;
+  background: #d0d5dd;
+  outline: none;
+  transition: background 0.18s ease;
+}
+
+input::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.25);
+  transition: transform 0.18s ease;
+}
+
+input:checked {
+  background: #1673fc;
+}
+
+input:checked::before {
+  transform: translateX(18px);
+}
+
+.status {
+  min-height: 18px;
+  margin-top: 12px;
+  color: #667085;
+  font-size: 12px;
+  line-height: 18px;
+}
