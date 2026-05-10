@@ -1,6 +1,8 @@
 (() => {
   const extensionApi = globalThis.chrome;
   const ENABLED_CLASS = "hjc-hide-right-chat";
+  const HAS_RIGHT_PANEL_CLASS = "hjc-has-right-chat";
+  const ALLOW_RIGHT_PANEL_CLASS = "hjc-allow-right-chat";
   const MARK = "data-hjc-right-chat";
   const DEFAULT_ENABLED = true;
   const LEGACY_STORAGE_KEY = "enabled";
@@ -12,6 +14,7 @@
   const RIGHT_PANEL_SELECTORS = [
     ".MgIN9 .wpkaX > ._1oGMc"
   ];
+  const HAOJIAO_MATCH_PATH_RE = /^\/wiki\/match(?:\/|$)/;
   const PANEL_TEXT_RE = /评论区|写评论|选手评分区|还没有人评论|暂无更多评论|聊天区|群聊|发消息|发送/;
   const VLR_FLAG_TEXT_RE = /^(taiwan|tw|twn)$/i;
   const CHINA_FLAG_SVG = encodeURIComponent(
@@ -26,12 +29,20 @@
   let observer = null;
   let scanTimer = 0;
 
+  if (!(HOST === "haojiao.cc" || HOST.endsWith(".haojiao.cc")) || !HAOJIAO_MATCH_PATH_RE.test(location.pathname)) {
+    document.documentElement.classList.add(ALLOW_RIGHT_PANEL_CLASS);
+  }
+
   const applySettings = (nextSettings) => {
     settings = {
       ...settings,
       ...nextSettings
     };
-    document.documentElement.classList.toggle(ENABLED_CLASS, settings.hideHaojiaoComments);
+    if (settings.hideHaojiaoComments && shouldHideHaojiaoComments()) {
+      setHaojiaoFeatureState(true);
+    } else {
+      setHaojiaoFeatureState(false);
+    }
     if (settings.hideHaojiaoComments || settings.replaceVlrFlags) {
       scheduleScan();
     }
@@ -41,12 +52,31 @@
 
   const isVlrPage = () => HOST === "vlr.gg" || HOST.endsWith(".vlr.gg");
 
+  const isLikelyHaojiaoChatRoute = () => HAOJIAO_MATCH_PATH_RE.test(location.pathname);
+
+  const shouldHideHaojiaoComments = () => isHaojiaoPage() && isLikelyHaojiaoChatRoute();
+
+  const setHaojiaoRightPanelState = (hasRightPanel) => {
+    document.documentElement.classList.toggle(ENABLED_CLASS, hasRightPanel);
+    document.documentElement.classList.toggle(HAS_RIGHT_PANEL_CLASS, hasRightPanel);
+  };
+
+  const setHaojiaoFeatureState = (enabled) => {
+    document.documentElement.classList.toggle(ALLOW_RIGHT_PANEL_CLASS, !enabled);
+    setHaojiaoRightPanelState(enabled);
+  };
+
   const markKnownPanels = () => {
+    let count = 0;
     RIGHT_PANEL_SELECTORS.forEach((selector) => {
       document.querySelectorAll(selector).forEach((node) => {
-        node.setAttribute(MARK, "true");
+        if (isLikelyRightPanel(node)) {
+          node.setAttribute(MARK, "true");
+          count += 1;
+        }
       });
     });
+    return count;
   };
 
   const isLikelyRightPanel = (node) => {
@@ -56,19 +86,21 @@
     if (!parent || !parent.classList.contains("wpkaX")) return false;
     if (node.classList.contains("yJDll")) return false;
 
-    const rect = node.getBoundingClientRect();
-    const width = rect.width || node.offsetWidth;
-    const text = node.innerText || "";
+    if (isLikelyHaojiaoChatRoute()) return true;
 
-    return width >= 240 && width <= 440 && PANEL_TEXT_RE.test(text);
+    const text = node.innerText || node.textContent || "";
+    return PANEL_TEXT_RE.test(text);
   };
 
   const markHeuristicPanels = () => {
+    let count = 0;
     document.querySelectorAll(".MgIN9 .wpkaX > div").forEach((node) => {
       if (isLikelyRightPanel(node)) {
         node.setAttribute(MARK, "true");
+        count += 1;
       }
     });
+    return count;
   };
 
   const replaceFlagUrl = (value) => {
@@ -163,9 +195,14 @@
   const scan = () => {
     scanTimer = 0;
 
-    if (settings.hideHaojiaoComments && isHaojiaoPage()) {
-      markKnownPanels();
-      markHeuristicPanels();
+    if (isHaojiaoPage()) {
+      if (settings.hideHaojiaoComments && shouldHideHaojiaoComments()) {
+        markKnownPanels();
+        markHeuristicPanels();
+        setHaojiaoFeatureState(true);
+      } else {
+        setHaojiaoFeatureState(false);
+      }
     }
 
     if (settings.replaceVlrFlags && isVlrPage()) {
@@ -185,6 +222,23 @@
       childList: true,
       subtree: true
     });
+  };
+
+  const watchRouteChanges = () => {
+    const syncRouteState = () => applySettings(settings);
+    const wrapHistoryMethod = (methodName) => {
+      const original = history[methodName];
+      history[methodName] = function wrappedHistoryMethod(...args) {
+        const result = original.apply(this, args);
+        syncRouteState();
+        return result;
+      };
+    };
+
+    wrapHistoryMethod("pushState");
+    wrapHistoryMethod("replaceState");
+    window.addEventListener("popstate", syncRouteState);
+    window.addEventListener("hashchange", syncRouteState);
   };
 
   const initStorage = () => {
@@ -241,6 +295,7 @@
   applySettings(settings);
   initStorage();
   startObserver();
+  watchRouteChanges();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", scan, { once: true });

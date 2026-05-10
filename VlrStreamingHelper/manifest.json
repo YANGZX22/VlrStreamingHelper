@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "VlrStreamingHelper",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "屏蔽 Haojiao.cc 右侧聊天/评论区，并替换 VLR.gg 的某不正当地区旗帜。",
   "permissions": [
     "storage"

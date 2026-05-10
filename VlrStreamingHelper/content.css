@@ -1,5 +1,5 @@
-html.hjc-hide-right-chat .MgIN9 .wpkaX > ._1oGMc,
-html.hjc-hide-right-chat [data-hjc-right-chat="true"] {
+html:not(.hjc-allow-right-chat) .MgIN9 .wpkaX > * + *,
+html:not(.hjc-allow-right-chat) [data-hjc-right-chat="true"] {
   display: none !important;
   visibility: hidden !important;
   width: 0 !important;
@@ -12,26 +12,29 @@ html.hjc-hide-right-chat [data-hjc-right-chat="true"] {
   pointer-events: none !important;
 }
 
-html.hjc-hide-right-chat .MgIN9 .wpkaX {
+html:not(.hjc-allow-right-chat) .MgIN9 .wpkaX {
   gap: 0 !important;
+  column-gap: 0 !important;
+  grid-template-columns: minmax(0, 1fr) !important;
 }
 
-html.hjc-hide-right-chat .MgIN9 .wpkaX > .yJDll {
+html:not(.hjc-allow-right-chat) .MgIN9 .wpkaX > :first-child {
   width: 100% !important;
   max-width: none !important;
+  min-width: 0 !important;
   flex: 1 1 auto !important;
 }
 
-html.hjc-hide-right-chat ._25apX._1RvKd {
+html:not(.hjc-allow-right-chat):has(.MgIN9 .wpkaX > * + *) ._25apX._1RvKd {
   min-width: 1118px !important;
 }
 
-html.hjc-hide-right-chat ._3vEWR {
+html:not(.hjc-allow-right-chat):has(.MgIN9 .wpkaX > * + *) ._3vEWR {
   width: 1118px !important;
   max-width: calc(100vw - 84px) !important;
 }
 
-html.hjc-hide-right-chat .MgIN9 .wpkaX .yJDll,
-html.hjc-hide-right-chat .MgIN9 .wpkaX .yJDll > * {
+html:not(.hjc-allow-right-chat) .MgIN9 .wpkaX > :first-child,
+html:not(.hjc-allow-right-chat) .MgIN9 .wpkaX > :first-child > * {
   box-sizing: border-box !important;
 }
