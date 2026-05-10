@@ -1,6 +1,6 @@
 # VlrStreamingHelper
 
-一个 Chrome/Edge 扩展，可以减少部分主播避免出现号角评论区打扰和 Vlr.gg 不正确的行为可能带来的影响。
+一个 Chrome/Edge 扩展，可以减少号角评论区对部分主播的打扰和 Vlr.gg 不正确的行为可能带来的影响。
 
 ## 功能
 
