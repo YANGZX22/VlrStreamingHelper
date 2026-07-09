@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "VlrStreamingHelper",
-  "version": "1.2.1",
-  "description": "屏蔽 Haojiao.cc 右侧聊天/评论区，并替换 VLR.gg 的某不正当地区旗帜。",
+  "version": "2.0.0",
+  "description": "Valorant 直播辅助功能及赛程识别导出",
   "permissions": [
     "storage"
   ],
@@ -27,6 +27,19 @@
         "content.js"
       ],
       "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://*.haojiao.cc/*",
+        "https://haojiao.cc/*"
+      ],
+      "css": [
+        "schedule.css"
+      ],
+      "js": [
+        "schedule.js"
+      ],
+      "run_at": "document_idle"
     }
   ],
   "action": {

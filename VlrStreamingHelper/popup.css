@@ -80,10 +80,50 @@ input:checked::before {
   transform: translateX(18px);
 }
 
-.status {
-  min-height: 18px;
-  margin-top: 12px;
-  color: #667085;
+.popup-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #eef0f4;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1673fc, #5e9bff);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  appearance: none;
+}
+
+.primary-btn:hover {
+  box-shadow: 0 6px 16px rgba(22, 115, 252, 0.28);
+  transform: translateY(-1px);
+}
+
+.primary-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(22, 115, 252, 0.22);
+}
+
+.primary-btn[disabled] {
+  background: #c7d0dd;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.hint {
+  margin-top: 8px;
   font-size: 12px;
-  line-height: 18px;
+  line-height: 16px;
+  color: #98a2b3;
+}
+
+.hint.is-error {
+  color: #d83737;
 }

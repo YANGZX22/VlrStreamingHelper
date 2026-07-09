@@ -10,11 +10,11 @@
     <main class="popup">
       <header>
         <h1>VlrStreamingHelper</h1>
-        <p>按站点独立控制辅助功能</p>
+        <p>Valorant 直播辅助功能及赛程识别导出</p>
       </header>
 
       <label class="toggle-row">
-        <span>号角评论区</span>
+        <span>隐藏号角评论区</span>
         <input id="hideHaojiaoComments" type="checkbox" role="switch">
       </label>
 
@@ -23,7 +23,9 @@
         <input id="replaceVlrFlags" type="checkbox" role="switch">
       </label>
 
-      <div id="status" class="status">读取状态中...</div>
+      <section class="popup-section">
+        <button id="openScheduleExport" type="button" class="primary-btn">前往赛程页</button>
+      </section>
     </main>
     <script src="popup.js"></script>
   </body>

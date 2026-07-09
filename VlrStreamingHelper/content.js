@@ -15,6 +15,9 @@
     ".MgIN9 .wpkaX > ._1oGMc"
   ];
   const HAOJIAO_MATCH_PATH_RE = /^\/wiki\/match(?:\/|$)/;
+  const HAOJIAO_SCHEDULE_PATH_RE = /^\/wiki\/schedule(?:\/|$)/;
+  const HAOJIAO_WIKI_SPACE_ROUTES = new Set(["wiki_home", "wiki_schedule", "schedule"]);
+  const SCHEDULE_BOOTSTRAP_PARAM = "hjc_open_schedule";
   const PANEL_TEXT_RE = /评论区|写评论|选手评分区|还没有人评论|暂无更多评论|聊天区|群聊|发消息|发送/;
   const VLR_FLAG_TEXT_RE = /^(taiwan|tw|twn)$/i;
   const CHINA_FLAG_SVG = encodeURIComponent(
@@ -53,6 +56,86 @@
   const isVlrPage = () => HOST === "vlr.gg" || HOST.endsWith(".vlr.gg");
 
   const isLikelyHaojiaoChatRoute = () => HAOJIAO_MATCH_PATH_RE.test(location.pathname);
+
+  const isHaojiaoScheduleRoute = () => HAOJIAO_SCHEDULE_PATH_RE.test(location.pathname);
+
+  const getHaojiaoWikiGameId = () => {
+    const parts = location.pathname.split("/").filter(Boolean);
+    if (parts[0] !== "wiki" || !HAOJIAO_WIKI_SPACE_ROUTES.has(parts[1])) return "";
+    return parts[2] || "";
+  };
+
+  const getHaojiaoSchedulePath = () => {
+    const gameId = getHaojiaoWikiGameId();
+    return gameId ? `/wiki/schedule/${encodeURIComponent(gameId)}` : "/wiki/schedule/";
+  };
+
+  const isVisibleElement = (node) => {
+    if (!(node instanceof HTMLElement)) return false;
+    const rect = node.getBoundingClientRect();
+    const style = getComputedStyle(node);
+    return rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && style.display !== "none";
+  };
+
+  const findScheduleNav = () => Array.from(document.querySelectorAll("span, button, a"))
+    .filter((node) => node.textContent?.trim() === "赛程" && isVisibleElement(node))
+    .sort((a, b) => {
+      const rectA = a.getBoundingClientRect();
+      const rectB = b.getBoundingClientRect();
+      return rectA.top - rectB.top || rectA.left - rectB.left;
+    })[0] || null;
+
+  const notifyRouteChanged = () => {
+    window.dispatchEvent(new PopStateEvent("popstate", { state: history.state }));
+    applySettings(settings);
+  };
+
+  const pushHaojiaoScheduleRoute = () => {
+    const nextPath = getHaojiaoSchedulePath();
+    if (location.pathname !== nextPath) {
+      history.pushState(history.state, "", nextPath);
+    } else {
+      history.replaceState(history.state, "", nextPath);
+    }
+    notifyRouteChanged();
+  };
+
+  const goToHaojiaoSchedule = (sendResponse = () => {}) => {
+    if (!isHaojiaoPage()) {
+      sendResponse({ ok: false, reason: "not_haojiao_page" });
+      return;
+    }
+
+    if (!isHaojiaoScheduleRoute()) {
+      const scheduleNav = findScheduleNav();
+      if (scheduleNav) {
+        scheduleNav.dispatchEvent(new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        }));
+      }
+    }
+
+    window.setTimeout(() => {
+      if (!isHaojiaoScheduleRoute()) {
+        pushHaojiaoScheduleRoute();
+      } else {
+        notifyRouteChanged();
+      }
+      sendResponse({ ok: true, url: location.href });
+    }, 120);
+  };
+
+  const maybeOpenScheduleFromBootstrap = () => {
+    const params = new URLSearchParams(location.search);
+    if (params.get(SCHEDULE_BOOTSTRAP_PARAM) !== "1") return;
+
+    params.delete(SCHEDULE_BOOTSTRAP_PARAM);
+    const nextSearch = params.toString();
+    history.replaceState(history.state, "", `${location.pathname}${nextSearch ? `?${nextSearch}` : ""}${location.hash}`);
+    window.setTimeout(() => goToHaojiaoSchedule(), 800);
+  };
 
   const shouldHideHaojiaoComments = () => isHaojiaoPage() && isLikelyHaojiaoChatRoute();
 
@@ -247,11 +330,11 @@
       return;
     }
 
-    extensionApi.storage.sync.get({
-      [LEGACY_STORAGE_KEY]: undefined,
-      [STORAGE_KEYS.hideHaojiaoComments]: undefined,
-      [STORAGE_KEYS.replaceVlrFlags]: undefined
-    }, (items) => {
+    extensionApi.storage.sync.get([
+      LEGACY_STORAGE_KEY,
+      STORAGE_KEYS.hideHaojiaoComments,
+      STORAGE_KEYS.replaceVlrFlags
+    ], (items) => {
       const legacyEnabled = items[LEGACY_STORAGE_KEY] !== false;
       applySettings({
         hideHaojiaoComments: items[STORAGE_KEYS.hideHaojiaoComments] ?? legacyEnabled,
@@ -288,6 +371,11 @@
         return true;
       }
 
+      if (message?.type === "HJC_GO_TO_SCHEDULE") {
+        goToHaojiaoSchedule(sendResponse);
+        return true;
+      }
+
       return false;
     });
   }
@@ -296,6 +384,7 @@
   initStorage();
   startObserver();
   watchRouteChanges();
+  maybeOpenScheduleFromBootstrap();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", scan, { once: true });

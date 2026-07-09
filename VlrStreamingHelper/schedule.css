@@ -1,0 +1,399 @@
+#hjc-schedule-export-fab.hjc-schedule-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  z-index: 2147483600;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #1673fc, #5e9bff);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 24px rgba(22, 115, 252, 0.32);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#hjc-schedule-export-fab.hjc-schedule-fab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(22, 115, 252, 0.42);
+}
+
+#hjc-schedule-export-fab.hjc-schedule-fab:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 18px rgba(22, 115, 252, 0.28);
+}
+
+#hjc-schedule-export-root {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483640;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #172033;
+}
+
+#hjc-schedule-export-root[hidden] {
+  display: none !important;
+}
+
+#hjc-schedule-export-root .hjc-se-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+#hjc-schedule-export-root .hjc-se-modal {
+  position: relative;
+  width: min(960px, calc(100vw - 48px));
+  max-height: calc(100vh - 64px);
+  margin: 32px auto;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+}
+
+#hjc-schedule-export-root .hjc-se-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid #eef0f4;
+}
+
+#hjc-schedule-export-root .hjc-se-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+#hjc-schedule-export-root .hjc-se-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #667085;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#hjc-schedule-export-root .hjc-se-close:hover {
+  background: #f1f3f7;
+  color: #172033;
+}
+
+#hjc-schedule-export-root .hjc-se-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  padding: 16px 22px;
+  border-bottom: 1px solid #eef0f4;
+  background: #f9fafc;
+}
+
+#hjc-schedule-export-root .hjc-se-filter-group {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#hjc-schedule-export-root .hjc-se-date-filter-group {
+  width: 100%;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#hjc-schedule-export-root .hjc-se-filter-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475467;
+  margin-right: 4px;
+  line-height: 28px;
+}
+
+#hjc-schedule-export-root .hjc-se-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#hjc-schedule-export-root [data-hjc-date-list] {
+  width: 100%;
+  max-height: 82px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1.5px solid #cfd6e2;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(22, 115, 252, 0.04);
+  align-content: flex-start;
+}
+
+#hjc-schedule-export-root .hjc-se-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #d8dee7;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#hjc-schedule-export-root .hjc-se-chip input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  border: 1.5px solid #b6bdc8;
+  border-radius: 4px;
+  background: #ffffff;
+  position: relative;
+  cursor: pointer;
+}
+
+#hjc-schedule-export-root .hjc-se-chip input:checked {
+  border-color: currentColor;
+  background: currentColor;
+}
+
+#hjc-schedule-export-root .hjc-se-chip input:checked::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+#hjc-schedule-export-root .hjc-se-chip-pacific { color: #1673fc; border-color: #b9d6ff; background: #eaf2ff; }
+#hjc-schedule-export-root .hjc-se-chip-emea { color: #b5860d; border-color: #f0d68a; background: #fcf3da; }
+#hjc-schedule-export-root .hjc-se-chip-americas { color: #1f9d55; border-color: #b6e3c2; background: #e9f7ee; }
+#hjc-schedule-export-root .hjc-se-chip-china { color: #d83737; border-color: #f3bcbc; background: #fceaea; }
+#hjc-schedule-export-root .hjc-se-chip-vct_champions { color: #b5860d; border-color: #f0d68a; background: #fcf3da; }
+#hjc-schedule-export-root .hjc-se-chip-vct_masters { color: #7a3ff2; border-color: #d7c7ff; background: #f3efff; }
+#hjc-schedule-export-root .hjc-se-chip-ewc_world { color: #0f7c80; border-color: #a8dcdf; background: #e7f8f8; }
+#hjc-schedule-export-root .hjc-se-chip-other { color: #475467; }
+#hjc-schedule-export-root .hjc-se-chip-date { color: #344054; }
+
+#hjc-schedule-export-root .hjc-se-preview {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 8px 22px 20px;
+  background: #ffffff;
+}
+
+#hjc-schedule-export-root .hjc-se-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  background: #ffffff;
+  border: 2px solid #d8dee7;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+#hjc-schedule-export-root .hjc-se-table thead th {
+  position: sticky;
+  top: 0;
+  padding: 12px 14px;
+  background: #f1f5fb;
+  color: #1673fc;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid #d8dee7;
+  border-right: 2px solid #d8dee7;
+}
+
+#hjc-schedule-export-root .hjc-se-table thead th:last-child { border-right: none; }
+
+#hjc-schedule-export-root .hjc-se-table td {
+  padding: 10px 14px;
+  text-align: center;
+  border-right: 2px solid #d8dee7;
+  border-bottom: 1px solid #e7ebf2;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#hjc-schedule-export-root .hjc-se-table td:last-child { border-right: none; }
+#hjc-schedule-export-root .hjc-se-table tr:last-child td { border-bottom: none; }
+
+#hjc-schedule-export-root .hjc-se-row td {
+  opacity: 0.45;
+  transition: opacity 0.12s ease, background 0.12s ease;
+}
+
+#hjc-schedule-export-root .hjc-se-row.is-picked td {
+  opacity: 1;
+}
+
+#hjc-schedule-export-root .hjc-se-row.is-picked:hover td {
+  background: rgba(22, 115, 252, 0.04);
+}
+
+#hjc-schedule-export-root .hjc-se-row-pacific.is-picked td { color: #1673fc; }
+#hjc-schedule-export-root .hjc-se-row-emea.is-picked td { color: #b5860d; }
+#hjc-schedule-export-root .hjc-se-row-americas.is-picked td { color: #1f9d55; }
+#hjc-schedule-export-root .hjc-se-row-china.is-picked td { color: #d83737; }
+#hjc-schedule-export-root .hjc-se-row-vct_champions.is-picked td { color: #b5860d; }
+#hjc-schedule-export-root .hjc-se-row-vct_masters.is-picked td { color: #7a3ff2; }
+#hjc-schedule-export-root .hjc-se-row-ewc_world.is-picked td { color: #0f7c80; }
+#hjc-schedule-export-root .hjc-se-row-other.is-picked td { color: #475467; }
+
+#hjc-schedule-export-root .hjc-se-row td.hjc-se-col-pick {
+  opacity: 1;
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick {
+  width: 40px;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1.5px solid #b6bdc8;
+  border-radius: 4px;
+  background: #ffffff;
+  position: relative;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick input:checked {
+  border-color: #1673fc;
+  background: #1673fc;
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick input:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick input:indeterminate {
+  border-color: #1673fc;
+  background: #1673fc;
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick input:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 6.5px;
+  width: 8px;
+  height: 2px;
+  background: #ffffff;
+}
+
+#hjc-schedule-export-root .hjc-se-col-pick input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#hjc-schedule-export-root .hjc-se-col-date,
+#hjc-schedule-export-root .hjc-se-col-time {
+  width: 16%;
+}
+
+#hjc-schedule-export-root .hjc-se-col-league {
+  width: 20%;
+}
+
+#hjc-schedule-export-root .hjc-se-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: #98a2b3;
+  font-size: 14px;
+}
+
+#hjc-schedule-export-root .hjc-se-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 22px;
+  border-top: 1px solid #eef0f4;
+  background: #f9fafc;
+}
+
+#hjc-schedule-export-root .hjc-se-count {
+  font-size: 13px;
+  color: #475467;
+}
+
+#hjc-schedule-export-root .hjc-se-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#hjc-schedule-export-root .hjc-se-download-tip {
+  max-width: 240px;
+  color: #667085;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+#hjc-schedule-export-root .hjc-se-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#hjc-schedule-export-root .hjc-se-btn-secondary {
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  color: #344054;
+}
+
+#hjc-schedule-export-root .hjc-se-btn-secondary:hover {
+  background: #f1f3f7;
+}
+
+#hjc-schedule-export-root .hjc-se-btn-primary {
+  background: #1673fc;
+  color: #ffffff;
+}
+
+#hjc-schedule-export-root .hjc-se-btn-primary:hover {
+  background: #1466e3;
+}
+
+html.hjc-se-modal-open,
+html.hjc-se-modal-open body {
+  overflow: hidden !important;
+}
